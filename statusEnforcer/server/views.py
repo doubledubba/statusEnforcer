@@ -2,6 +2,7 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import logout
 
 from statusEnforcer.settings import SECRET_KEY
 
@@ -68,7 +69,6 @@ def killswitch(request):
     
 @csrf_exempt
 def check_in(request):
-    print request.POST
     if not request.method == 'POST':
         return HttpResponse('away, hacker!')
     clientId = request.POST.get('clientId')
@@ -83,12 +83,12 @@ def check_in(request):
         computer.save()
         return HttpResponse(computer.pk, mimetype='text/plain')
 		
-	clientPws = request.POST.get('key')
-	
+    clientPws = request.POST.get('key')
+    
     computer = get_object_or_404(Computer, pk=clientId)
-	#authenticate the client
-	if clientPws != computer.key
-		return HttpResponse('ok', mimetype='text/plain')
+    #authenticate the client
+    if clientPws != computer.key:
+        return HttpResponse('nope', mimetype='text/plain')
 	
     computer.lastConnection = datetime.now(utc)
     computer.connected = True
@@ -99,3 +99,6 @@ def check_in(request):
     return HttpResponse(status + "~" + SECRET_KEY, mimetype='text/plain')
 
 
+def logout_view(request):
+    logout(request)
+    return redirect('/')
