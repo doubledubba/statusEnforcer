@@ -16,12 +16,10 @@ logger = logging.getLogger()
 command = {
         'shutdown': 'sudo shutdown -h now',
         'restart': 'sudo shutdown -r now',
-        'hibernation': 'hibernate',
-        'logoff': 'logoff',
-        'lock': 'lock',
+        'hibernation': 'notify-send hibernate',
+        'logoff': 'notify-send logoff',
+        'lock': 'notify-send lock',
 }
-
-command['lock'] = 'notify-send hello'
 
 CONFIG_PATH = os.path.join(os.environ['HOME'], '.config/statusEnforcer.txt')
 HOST = 'http://10.100.58.69'

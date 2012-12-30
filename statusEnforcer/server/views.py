@@ -60,7 +60,7 @@ def killswitch(request):
                 'gif': True}
         return render(request, 'server/computer_profile.html', params)
     elif request.method == 'POST':
-        for computer in Computer.objects.all():
+        for computer in Computer.objects.filter(connected=True):
             status = request.POST['status']
             computer.status = status
             computer.save()
