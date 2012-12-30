@@ -17,24 +17,22 @@ namespace codeDay2012
         {    
             int secs = 5;
             
+            
             check(); //initial check of computer name and id # retreival from server
+            //getting all the information needed
+            StreamReader r = new StreamReader("config.txt");        //read id from the file
+            String[] info = r.ReadToEnd().Split('~');
+
+            String id = info[0];
+            String clientPws = info[1];
+            String serverIp = info[2];
+            String serverPws = info[3];
+            r.Close();
 
             
-
             //===========TIMER=========
             while(true)
-            {
-                //getting all the information needed
-                StreamReader r = new StreamReader("config.txt");        //read id from the file
-                String[] info = r.ReadToEnd().Split('~');
-
-                String id = info[0];
-                String clientPws = info[1];
-                String serverIp = info[2];
-                String serverPws = info[3];
-                r.Close();
-
-                //code here
+            {                
                 WebRequest request = WebRequest.Create("http://" + serverIp + "/check_in");
                 request.Method = "POST";
 
@@ -42,6 +40,7 @@ namespace codeDay2012
                 byte[] byteArray = Encoding.UTF8.GetBytes(postData);
                 request.ContentType = "application/x-www-form-urlencoded";
                 request.ContentLength = byteArray.Length;
+
                 Stream dataStream = request.GetRequestStream();
                 dataStream.Write(byteArray, 0, byteArray.Length);
 
