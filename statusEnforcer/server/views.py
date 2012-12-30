@@ -63,17 +63,3 @@ def check_in(request):
     return HttpResponse(status, mimetype='text/plain')
 
 
-def getComputers(request):
-    data = {}
-
-    computers = Computer.objects.all()
-    for computer in computers:
-            data["name_" + str(computer.pk)] = computer.name
-            data["id_" + str(computer.pk)] = computer.pk
-            date = str(computer.lastConnection)
-            data['lastConnection_' + str(computer.pk)] = date
-
-    1	
-
-    dump = json.dumps(data)
-    return HttpResponse(dump, mimetype='application/json')

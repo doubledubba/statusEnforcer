@@ -1,6 +1,16 @@
 {% extends "base.html" %}
 
 {% block body %}
+
+<script>
+    function reloader()
+    {
+        setTimeout(function() {window.location.reload();}, 5000);
+    }
+    window.onload = reloader
+
+</script>
+
 <table border="1">
     <tr>
         <td>Computer</td>
@@ -13,7 +23,7 @@
             <a href="{{ computer.get_absolute_url }}">{{ computer.name }}</a>
         </td>
         <td>{{ computer.pk }}</td>
-        <td>{{ computer.lastConnection }}</td>
+        <td>{{ computer.activityLength }}</td>
     </tr> 
     {% endfor %}
 </table>

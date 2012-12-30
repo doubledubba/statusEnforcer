@@ -1,6 +1,15 @@
 {% extends "base.html" %}
 
 {% block body %}
+
+<script>
+    function reloader()
+    {
+        setTimeout(function() {window.location.reload();}, 5000);
+    }
+    window.onload = reloader
+</script>
+
 <table border="1">
     <tr>
         <td>Computer</td>
