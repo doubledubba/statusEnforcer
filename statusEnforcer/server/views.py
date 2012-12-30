@@ -97,10 +97,6 @@ def check_in(request):
     if computer.status != 'ok':
         computer.status = 'ok'
 
-    #if not computer.ip:
-        #computer.ip = request.META.get('HTTP_X_FORWARDED_FOR')
-
-
     computer.save()
     return HttpResponse(status + "~" + SECRET_KEY, mimetype='text/plain')
 

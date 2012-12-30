@@ -13,6 +13,15 @@ logging.basicConfig(format='[%(levelname)s] [%(asctime)s]: %(message)s',
         level=logging.INFO)
 logger = logging.getLogger()
 
+command = {
+        'shutdown': 'sudo shutdown -h now',
+        'restart': 'sudo shutdown -r now',
+        'hibernation': 'hibernate',
+        'logoff': 'logoff',
+        'lock': 'lock',
+}
+
+command['lock'] = 'notify-send hello'
 
 CONFIG_PATH = os.path.join(os.environ['HOME'], '.config/statusEnforcer.txt')
 HOST = 'http://10.100.58.69'
@@ -44,10 +53,17 @@ while True:
         logger.warning('Auth failed!')
 
     else:
-        status, reqSrvKey = r.text.split('~')
+        try:
+            status, reqSrvKey = r.text.split('~')
+        except ValueError:
+            logger.warning('Your configuration might be outdated!')
+            break
 
         if reqSrvKey == SrvKey:
             logger.info('Received command from authentic server: %s', status)
+            if status != 'ok':
+                cmd = command[status]
+                os.system(cmd)
 
 
     sleep(5)

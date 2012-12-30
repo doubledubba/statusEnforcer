@@ -11,8 +11,6 @@ class Computer(models.Model):
     status = models.CharField(max_length=80)
     connected = models.BooleanField(default=False)
     key = models.CharField(max_length=255)
-    phone = models.CharField(max_length=14)
-    ip = models.CharField(max_length=80)
 
     def __unicode__(self):
         return self.name
