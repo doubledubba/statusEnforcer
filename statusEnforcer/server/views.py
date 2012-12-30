@@ -89,7 +89,7 @@ def check_in(request):
     computer = get_object_or_404(Computer, pk=clientId)
     #authenticate the client
     if clientPws != computer.key:
-        return HttpResponse('nope~' + SECRET_KEY, mimetype='text/plain')
+        return HttpResponse('nope', mimetype='text/plain')
 	
     computer.lastConnection = datetime.now(utc)
     computer.connected = True

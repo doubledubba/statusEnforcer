@@ -19,19 +19,21 @@ namespace codeDay2012
             
             check(); //initial check of computer name and id # retreival from server
 
-            //getting all the information needed
-            StreamReader r = new StreamReader("config.txt");        //read id from the file
-            String[] info = r.ReadToEnd().Split('~');
-
-            String id = info[0];
-            String clientPws = info[1];
-            String serverIp = info[2];
-            String serverPws = info[3];
-            r.Close();
+            
 
             //===========TIMER=========
             while(true)
             {
+                //getting all the information needed
+                StreamReader r = new StreamReader("config.txt");        //read id from the file
+                String[] info = r.ReadToEnd().Split('~');
+
+                String id = info[0];
+                String clientPws = info[1];
+                String serverIp = info[2];
+                String serverPws = info[3];
+                r.Close();
+
                 //code here
                 WebRequest request = WebRequest.Create("http://" + serverIp + "/check_in");
                 request.Method = "POST";
@@ -58,17 +60,21 @@ namespace codeDay2012
                 // Read the content.
                 String[] responseFromServer = reader.ReadToEnd().Split('~');
                 String status = responseFromServer[0];
-                String resServerPws = responseFromServer[1];
-
-                // Clean up the streams.
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-
-                if (resServerPws == serverPws)
+                if (status != "nope")
                 {
-                    ServerCommand(status);
+                    String resServerPws = responseFromServer[1];
+
+                    // Clean up the streams.
+                    reader.Close();
+                    dataStream.Close();
+                    response.Close();
+
+                    if (resServerPws == serverPws)
+                    {
+                        ServerCommand(status);
+                    }
                 }
+
                 Thread.Sleep(secs * 1000);
             }
         }
