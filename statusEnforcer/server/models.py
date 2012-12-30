@@ -22,4 +22,5 @@ class Computer(models.Model):
         connection'''
 
         return abs(now - self.lastConnection)
+		#comment
 
