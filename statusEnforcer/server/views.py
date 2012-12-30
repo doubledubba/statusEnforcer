@@ -1,7 +1,9 @@
 from django.http import HttpResponse
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 
 from server.models import Computer
+from pytz import utc
+from datetime import datetime
 
 '''
 Each function is a "view".
@@ -46,4 +48,13 @@ def computer_profile(request, clientId):
 
 
 def check_in(request):
-    return HttpResponse('hey')
+    if not request.method == 'POST':
+        return HttpResponse('away, hacker!')
+    clientId = request.POST['clientId']
+    computer = get_object_404(Computer, pk=clientId)
+    computer.lastConnection = datetime.now(utc)
+    computer.connected = True
+    computer.save()
+    return HttpResponse(computer.status, mimetype='text/plain')
+
+
