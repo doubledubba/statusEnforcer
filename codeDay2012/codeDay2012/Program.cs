@@ -180,29 +180,24 @@ namespace codeDay2012
             switch (command)
             {
                 case "shutdown":
-                    Console.WriteLine("Would you like to shut down?");
-                    string n = Console.ReadLine();
                     t_msg = "Your computer will shut down";
-                    if (n.ToUpper() == "Y")
-                    {
-                        msg = twilio.SendSmsMessage("+13603394722", phone, t_msg);
-                        System.Diagnostics.Process.Start("shutdown.exe", "/s /t 0");
-                    }
+                    msg = twilio.SendSmsMessage("+13603394722", phone, t_msg);
+                    System.Diagnostics.Process.Start("shutdown.exe", "/s /t 15");
                     break;
                 case "hibernate":
                     t_msg = "Your computer will now hibernate";
                     msg = twilio.SendSmsMessage("+13603394722", phone, t_msg);
-                    System.Diagnostics.Process.Start("shutdown.exe", "/h");
+                    System.Diagnostics.Process.Start("shutdown.exe", "/h /t 15");
                     break;
                 case "restart":
                     t_msg = "Your computer will now reboot";
                     msg = twilio.SendSmsMessage("+13603394722", phone, t_msg);
-                    System.Diagnostics.Process.Start("shutdown.exe", "/r");
+                    System.Diagnostics.Process.Start("shutdown.exe", "/r /t 15");
                     break;
                 case "logoff":
                     t_msg = "Your computer will now logoff";
                     msg = twilio.SendSmsMessage("+13603394722", phone, t_msg);
-                    System.Diagnostics.Process.Start("shutdown.exe", "/l");
+                    System.Diagnostics.Process.Start("shutdown.exe", "/l /t 15");
                     break;
                 case "lock":
                     t_msg = "Your computer will now lock";
