@@ -25,3 +25,4 @@ C:\Users\John\Desktop\codeDay2012\codeDay2012\bin\Debug\Newtonsoft.Json.xml
 C:\Users\John\Desktop\codeDay2012\codeDay2012\bin\Debug\RestSharp.xml
 C:\Users\John\Desktop\codeDay2012\codeDay2012\bin\Debug\Twilio.Api.pdb
 C:\Users\John\Desktop\codeDay2012\codeDay2012\bin\Debug\Twilio.Api.xml
+C:\Users\John\Desktop\codeDay2012\codeDay2012\obj\Debug\codeDay2012.csprojResolveAssemblyReference.cache

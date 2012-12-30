@@ -112,9 +112,9 @@ namespace codeDay2012
                 clientPws = Console.ReadLine();
                 Console.Write("Enter server address: ");
                 serverIp = Console.ReadLine();
-                Console.Write("What's your 10 digit phone number? (area code first)");
+                Console.Write("What's your 10 digit phone number? (area code first): ");
                 phoneNo = Console.ReadLine();
-                string phone = "+1" + Console.ReadLine();
+                phoneNo = "+1" + phoneNo;
 
                 serverPws = "fu@qy71q@_2-g_e_!3v$s5ecf)ar=ur0s@t&amp;m5_&amp;fy_elw&amp;m#%";
             }
