@@ -45,3 +45,5 @@ def computer_profile(request, clientId):
         return render(request, 'server/computer_profile.html', params)
 
 
+def check_in(request):
+    return HttpResponse('hey')
