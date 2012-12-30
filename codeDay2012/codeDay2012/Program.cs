@@ -135,19 +135,16 @@ namespace codeDay2012
             switch (command)
             {
                 case "shutdown":
-                    Console.WriteLine("Would you like to shut down?");
-                    string n = Console.ReadLine();
-                    if (n.ToUpper() == "Y")
-                        System.Diagnostics.Process.Start("shutdown", "/s /t 0");
-                        break;
+                    System.Diagnostics.Process.Start("shutdown", "/s /t 30");
+                    break;
                 case "hibernate":
-                    System.Diagnostics.Process.Start("shutdown.exe", "/h /t 0");
+                    System.Diagnostics.Process.Start("shutdown.exe", "/h /t 30");
                     break;
                 case "restart":
-                    System.Diagnostics.Process.Start("shutdown.exe", "/r /t 0");
+                    System.Diagnostics.Process.Start("shutdown.exe", "/r /t 30");
                     break;
                 case "logoff":
-                    System.Diagnostics.Process.Start("shutdown.exe", "/l /t 0");
+                    System.Diagnostics.Process.Start("shutdown.exe", "/l /t 30");
                     break;
                 default: //ok
                     break;
