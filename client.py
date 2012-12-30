@@ -26,7 +26,7 @@ with open(CONFIG_PATH, 'r+') as fh:
         fh.write(r.text)
         
 while True:
-    r = requests.post(API, {'clientId': 1, 'key': key})
+    r = requests.post(API, {'clientId': 2, 'key': key})
 
     if r.text == 'nope':
         print 'Auth failed!'
