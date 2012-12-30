@@ -80,6 +80,7 @@ def check_in(request):
         computer = Computer()
         computer.name = name
         computer.lastConnection = datetime.now(utc)
+        computer.key = request.POST.get('key')
         computer.save()
         return HttpResponse(computer.pk, mimetype='text/plain')
 		
