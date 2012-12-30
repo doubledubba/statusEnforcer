@@ -27,7 +27,7 @@ def index(request):
 def listing(request):
     '''Main listing of all the computers'''
 
-    params = {'computers': Computer.objects.all()}
+    params = {'computers': Computer.objects.all().order_by('-connected')}
     # computer.objects.all() returns a list of all of the computer objects in
     # the db
     return render(request, 'server/listing.html', params)
