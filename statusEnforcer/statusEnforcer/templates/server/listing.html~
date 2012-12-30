@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block body %}
+<table border="1">
+    <tr>
+        <td>Computer</td>
+        <td>ID</td>
+    </tr> 
+    {% for computer in computers %}
+    <tr>
+        <td>{{ computer.name }}</td>
+        <td>{{ computer.pk }}</td>
+    </tr> 
+    {% endfor %}
+</table>
+{% endblock body %}
