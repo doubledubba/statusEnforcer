@@ -2,7 +2,8 @@ from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import logout
+
+from statusEnforcer.settings import SECRET_KEY
 
 import json
 from server.models import Computer
@@ -28,7 +29,7 @@ def index(request):
 def listing(request):
     '''Main listing of all the computers'''
 
-    params = {'computers': Computer.objects.all().order_by('-connected')}
+    params = {'computers': Computer.objects.all()}
     # computer.objects.all() returns a list of all of the computer objects in
     # the db
     return render(request, 'server/listing.html', params)
@@ -71,6 +72,7 @@ def check_in(request):
     if not request.method == 'POST':
         return HttpResponse('away, hacker!')
     clientId = request.POST.get('clientId')
+	
     if not clientId:
         name = request.POST.get('name')
         if not name:
@@ -80,16 +82,20 @@ def check_in(request):
         computer.lastConnection = datetime.now(utc)
         computer.save()
         return HttpResponse(computer.pk, mimetype='text/plain')
+		
+	clientPws = request.POST.get('key')
+	
     computer = get_object_or_404(Computer, pk=clientId)
+	#authenticate the client
+	if clientPws != computer.key
+		return HttpResponse('ok', mimetype='text/plain')
+	
     computer.lastConnection = datetime.now(utc)
     computer.connected = True
     status = computer.status
     if computer.status != 'ok':
         computer.status = 'ok'
     computer.save()
-    return HttpResponse(status, mimetype='text/plain')
+    return HttpResponse(status + "~" + SECRET_KEY, mimetype='text/plain')
 
 
-def logout_view(request):
-    logout(request)
-    return redirect('/')

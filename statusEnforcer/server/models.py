@@ -10,6 +10,7 @@ class Computer(models.Model):
     lastConnection = models.DateTimeField()
     status = models.CharField(max_length=80)
     connected = models.BooleanField(default=False)
+	key = models.CharField(max_length=255)
 
     def __unicode__(self):
         return self.name

@@ -18,11 +18,15 @@ namespace codeDay2012
             int secs = 5;
             
             check(); //initial check of computer name and id # retreival from server
-            //prepare data to send
+
+            //getting all the information needed
             StreamReader r = new StreamReader("config.txt");        //read id from the file
             String[] info = r.ReadToEnd().Split('~');
+
             String id = info[0];
-            String serverIp = info[1];
+            String clientPws = info[1];
+            String serverIp = info[2];
+            String serverPws = info[3];
             r.Close();
 
             //===========TIMER=========
@@ -32,7 +36,7 @@ namespace codeDay2012
                 WebRequest request = WebRequest.Create("http://" + serverIp + "/check_in");
                 request.Method = "POST";
 
-                string postData = string.Format("clientId=" + id);
+                string postData = string.Format("clientId=" + id + "&key=" + clientPws);    //include the key into the request for authentication
                 byte[] byteArray = Encoding.UTF8.GetBytes(postData);
                 request.ContentType = "application/x-www-form-urlencoded";
                 request.ContentLength = byteArray.Length;
@@ -52,15 +56,21 @@ namespace codeDay2012
                 // Open the stream using a StreamReader for easy access.
                 StreamReader reader = new StreamReader(dataStream);
                 // Read the content.
-                string responseFromServer = reader.ReadToEnd();
+                String[] responseFromServer = reader.ReadToEnd().Split('~');
+                String status = responseFromServer[0];
+                String resServerPws = responseFromServer[1];
+
                 // Display the content.
                 Console.WriteLine(responseFromServer); //THIS IS THE COMMAND!!!!!!!!!!!
                 // Clean up the streams.
                 reader.Close();
                 dataStream.Close();
                 response.Close();
-                ServerCommand(responseFromServer);
-                //WebResponse response = request.GetResponse();
+
+                if (resServerPws == serverPws)
+                {
+                    ServerCommand(status);
+                }
                 Thread.Sleep(secs * 1000);
             }
         }
