@@ -61,6 +61,7 @@ def check_in(request):
             return HttpResponse('0')
         computer = Computer()
         computer.name = name
+        computer.lastConnection = datetime.now(utc)
         computer.save()
         return HttpResponse(computer.pk, mimetype='text/plain')
     computer = get_object_or_404(Computer, pk=clientId)

@@ -5,6 +5,8 @@ CONFIG_PATH = os.path.join(os.environ['HOME'], '.config/statusEnforcer.txt')
 HOST = 'http://10.100.58.69'
 API = '%s/check_in' % HOST
 
+os.system('touch %s' % CONFIG_PATH)
+
 with open(CONFIG_PATH, 'r+a') as fh:
     config = fh.read()
     if not config:
