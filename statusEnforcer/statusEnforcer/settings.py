@@ -153,3 +153,4 @@ LOGGING = {
 
 
 threshold = 15
+LOGIN_URL = '/admin/' # Make this clean and original
