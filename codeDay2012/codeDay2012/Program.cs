@@ -17,72 +17,80 @@ namespace codeDay2012
     {
         public static void Main(string[] args)
         {
-            string password, username;
-            Console.Write("Enter the password: ");
-            password = Console.ReadLine();
+            try
+            {
+                string password, username;
+                Console.Write("Enter the password: ");
+                password = Console.ReadLine();
             redo:
-            Console.Write("Enter the username (must be 8 or more characters long): ");
-            username = Console.ReadLine();  //must be 8+char
-            if (username.Length < 8)
-                goto redo;
+                Console.Write("Enter the username (must be 8 or more characters long): ");
+                username = Console.ReadLine();  //must be 8+char
+                if (username.Length < 8)
+                    goto redo;
 
-            int secs = 5;
-            
-            check(username, password); //initial check of computer name and id # retreival from server
-            //getting all the information needed
-            String[] info = getConfig(username, password).Split('~');
+                int secs = 5;
 
-            String id = info[0];
-            String clientPws = info[1];
-            String serverIp = info[2];
-            String serverPws = info[3];
-            String phoneNo = info[4];
-            
-            //===========TIMER=========
-            while(true)
-            {                
-                WebRequest request = WebRequest.Create("http://" + serverIp + "/check_in");
-                request.Method = "POST";
+                check(username, password); //initial check of computer name and id # retreival from server
+                //getting all the information needed
+                String[] info = getConfig(username, password).Split('~');
 
-                string postData = string.Format("clientId=" + id + "&key=" + clientPws);    //include the key into the request for authentication
-                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
-                request.ContentType = "application/x-www-form-urlencoded";
-                request.ContentLength = byteArray.Length;
+                String id = info[0];
+                String clientPws = info[1];
+                String serverIp = info[2];
+                String serverPws = info[3];
+                String phoneNo = info[4];
 
-                Stream dataStream = request.GetRequestStream();
-                dataStream.Write(byteArray, 0, byteArray.Length);
-
-
-                // Close the Stream object.
-                dataStream.Close();
-
-                // Get the response.
-                WebResponse response = request.GetResponse();
-                // Display the status.
-                Console.WriteLine(((HttpWebResponse)response).StatusDescription);
-                // Get the stream containing content returned by the server.
-                dataStream = response.GetResponseStream();
-                // Open the stream using a StreamReader for easy access.
-                StreamReader reader = new StreamReader(dataStream);
-                // Read the content.
-                String[] responseFromServer = reader.ReadToEnd().Split('~');
-                String status = responseFromServer[0];
-                if (status != "nope")
+                //===========TIMER=========
+                while (true)
                 {
-                    String resServerPws = responseFromServer[1];
+                    WebRequest request = WebRequest.Create("http://" + serverIp + "/check_in");
+                    request.Method = "POST";
 
-                    // Clean up the streams.
-                    reader.Close();
+                    string postData = string.Format("clientId=" + id + "&key=" + clientPws);    //include the key into the request for authentication
+                    byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                    request.ContentType = "application/x-www-form-urlencoded";
+                    request.ContentLength = byteArray.Length;
+
+                    Stream dataStream = request.GetRequestStream();
+                    dataStream.Write(byteArray, 0, byteArray.Length);
+
+
+                    // Close the Stream object.
                     dataStream.Close();
-                    response.Close();
 
-                    if (resServerPws == serverPws)
+                    // Get the response.
+                    WebResponse response = request.GetResponse();
+                    // Display the status.
+                    Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+                    // Get the stream containing content returned by the server.
+                    dataStream = response.GetResponseStream();
+                    // Open the stream using a StreamReader for easy access.
+                    StreamReader reader = new StreamReader(dataStream);
+                    // Read the content.
+                    String[] responseFromServer = reader.ReadToEnd().Split('~');
+                    String status = responseFromServer[0];
+                    if (status != "nope")
                     {
-                        ServerCommand(status, phoneNo);
-                    }
-                }
+                        String resServerPws = responseFromServer[1];
 
-                Thread.Sleep(secs * 1000);
+                        // Clean up the streams.
+                        reader.Close();
+                        dataStream.Close();
+                        response.Close();
+
+                        if (resServerPws == serverPws)
+                        {
+                            ServerCommand(status, phoneNo);
+                        }
+                    }
+
+                    Thread.Sleep(secs * 1000);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("Error: ", e.Message);
+                Console.Read();
             }
         }
 
