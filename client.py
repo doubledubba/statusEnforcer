@@ -19,6 +19,7 @@ command = {
         'hibernation': 'sudo pm-hibernate',
         'logoff': 'gnome-session-quit',
         'lock': 'gnome-screensaver-command -l',
+        #'ebay': 'firefox ebay.com',
 }
 
 if platform == 'darwin':
