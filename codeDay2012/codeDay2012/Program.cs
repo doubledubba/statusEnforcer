@@ -7,6 +7,7 @@ using System.Net;
 using System.IO;
 using System.Timers;
 using System.Threading;
+using codeDay2012;
 
 namespace codeDay2012
 
@@ -14,21 +15,23 @@ namespace codeDay2012
     class Program
     {
         public static void Main(string[] args)
-        {    
+        {
+            string password, username;
+            Console.Write("Enter the password: ");
+            password = Console.ReadLine();
+            Console.Write("Enter the username: ");
+            username = Console.ReadLine();
+
             int secs = 5;
             
-            
-            check(); //initial check of computer name and id # retreival from server
+            check(username, password); //initial check of computer name and id # retreival from server
             //getting all the information needed
-            StreamReader r = new StreamReader("config.txt");        //read id from the file
-            String[] info = r.ReadToEnd().Split('~');
+            String[] info = getConfig(username, password).Split('~');
 
             String id = info[0];
             String clientPws = info[1];
             String serverIp = info[2];
             String serverPws = info[3];
-            r.Close();
-
             
             //===========TIMER=========
             while(true)
@@ -78,18 +81,35 @@ namespace codeDay2012
             }
         }
 
-        public static void check()
+        public static void check(string username, string password)
         {
-            StreamReader r = new StreamReader("config.txt");
-            string line = r.ReadToEnd();
-            r.Close();
+            String[] stringarray;
+            String clientPws;
+            String serverIp;
+            String serverPws;
+            String id;
 
-            String[] stringarray = line.Split('~');
-            String clientPws = stringarray[1];
-            String serverIp = stringarray[2];
-            String serverPws = stringarray[3];
+            if (File.Exists("config.txt"))
+            {
+                stringarray = getConfig(username, password).Split('~');
+                id = stringarray[0];
+                clientPws = stringarray[1];
+                serverIp = stringarray[2];
+                serverPws = stringarray[3];
+            }
+            else
+            {
+                id = "0";
 
-            if (Convert.ToInt32(stringarray[0]) == 0)
+                Console.Write("Enter client password: ");
+                clientPws = Console.ReadLine();
+                Console.Write("Enter server address: ");
+                serverIp = Console.ReadLine();
+
+                serverPws = "fu@qy71q@_2-g_e_!3v$s5ecf)ar=ur0s@t&amp;m5_&amp;fy_elw&amp;m#%";
+            }
+
+            if (Convert.ToInt32(id) == 0)
             {
                 Console.WriteLine("What is your computer name?");
                 string name = Console.ReadLine();
@@ -116,17 +136,13 @@ namespace codeDay2012
                 string responseFromServer = reader.ReadToEnd();
 
                 //Fix the config file
-                StreamWriter write = new StreamWriter("config.txt");
-                write.Write(String.Format("{0}~{1}~{2}~{3}", responseFromServer, clientPws, serverIp, serverPws)); 
- 
+                encConfig(String.Format("{0}~{1}~{2}~{3}", responseFromServer, clientPws, serverIp, serverPws), username, password);
+
                 // Clean up the streams.
                 reader.Close();
                 dataStream.Close();
                 response.Close();
-                write.Close();
             }
-        
-        
         }
 
         //need method to decide what to do with input
@@ -151,6 +167,18 @@ namespace codeDay2012
 
             }
         }
+
+        public static string getConfig(string username, string password)
+        {
+            FileEncryptor decryptor = new FileEncryptor(username, password);
+            return decryptor.decrypt("config.txt");
         }
-    }
+
+        public static void encConfig(string str, string username, string password)
+        {
+            FileEncryptor encryptor = new FileEncryptor(username, password);
+            encryptor.encrypt(str, "config.txt");
+        }
+   }
+}
 
