@@ -15,18 +15,14 @@ namespace codeDay2012
     {
         public static void Main(string[] args)
         {
-           //IPADDRESS = 10.100.58.69
-          //  StreamReader SR = new StreamReader("config.txt");
-            //string IPAddress = SR.ReadToEnd(); //get IP ADDRESS. may need to update once config file gets more complex
-            string IPAddress = "http://httpbin.org/post";
-            bool status;  //true/false value; true = on false = off
-            int clientID = 1; //unique for each CLIENT
-
-           // HttpWebRequest request;
+         
+  
+        
 
             Thread Begin; //initializing thread to pick send request every 30 secs
             int secs = 30;
-
+            
+            check(); //initial check of computer name and id # retreival from server
 
             WebRequest request = WebRequest.Create("http://10.100.58.69/check_in");
             request.Method = "POST";
@@ -66,6 +62,53 @@ namespace codeDay2012
        
             }
         }
+
+        public static void check()
+        {
+
+            StreamReader r = new StreamReader("config.txt");
+            string line = r.ReadToEnd();
+            r.Close();
+            String[] stringarray = line.Split('~');
+            if (Convert.ToInt32(stringarray[0]) == 0)
+            {
+                Console.WriteLine("What is your computer name?");
+                string name = Console.ReadLine();
+
+                WebRequest request = WebRequest.Create("http://10.100.58.69/check_in");
+                request.Method = "POST";
+                string postData = "name=" + name;
+                byte[] byteArray = Encoding.UTF8.GetBytes(postData);
+                request.ContentType = "application/x-www-form-urlencoded";
+                request.ContentLength = byteArray.Length;
+                Stream dataStream = request.GetRequestStream();
+                dataStream.Write(byteArray, 0, byteArray.Length);
+                // Close the Stream object.
+                dataStream.Close();
+                // Get the response.
+                WebResponse response = request.GetResponse();
+                // Display the status.
+                Console.WriteLine(((HttpWebResponse)response).StatusDescription);
+                // Get the stream containing content returned by the server.
+                dataStream = response.GetResponseStream();
+                // Open the stream using a StreamReader for easy access.
+                StreamReader reader = new StreamReader(dataStream);
+                // Read the content.
+                string responseFromServer = reader.ReadToEnd();
+                StreamWriter write = new StreamWriter("config.txt");
+                write.Write(String.Format(responseFromServer + "~{0}~{1}", stringarray[1], name));  
+                // Display the content.
+                //Console.WriteLine(responseFromServer); //THIS IS THE COMMAND!!!!!!!!!!!
+                // Clean up the streams.
+                reader.Close();
+                dataStream.Close();
+                response.Close();
+                write.Close();
+            }
+        
+        
+        }
+
         //need method to decide what to do with input
         public static void ServerCommand(string command)
         {
