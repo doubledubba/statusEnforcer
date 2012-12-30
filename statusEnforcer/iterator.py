@@ -15,4 +15,4 @@ while True:
             computer.save()
             print '%s not within threshold' % computer
 
-    time.sleep(60)
+    time.sleep(15)
