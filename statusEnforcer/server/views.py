@@ -49,6 +49,21 @@ def computer_profile(request, clientId):
         params = {'computer': computer}
         return render(request, 'server/computer_profile.html', params)
 
+
+@login_required
+def killswitch(request):
+    if request.method == 'GET':
+        params = {'computer': 'Apply global action',
+                'gif': 'bit.ly/WcTfps'}
+        return render(request, 'server/computer_profile.html', params)
+    elif request.method == 'POST':
+        for computer in Computer.objects.all():
+            status = request.POST['status']
+            computer.status = status
+            computer.save()
+            print 'Setting %s to %s' % (computer, status)
+        return redirect('/listing')
+    
 @csrf_exempt
 def check_in(request):
     print request.POST

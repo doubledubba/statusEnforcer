@@ -4,6 +4,10 @@
 
 <h1>{{ computer }}</h1>
 
+{% if gif %}
+<img src="http://i0.kym-cdn.com/photos/images/original/000/056/667/madagascar.gif" />
+{% endif %}
+
 <form method="POST">
     {% csrf_token %}
     <select name="status">

@@ -10,11 +10,14 @@
     window.onload = reloader
 </script>
 
+<a href="/killswitch">Massive Action</a>
+
 <table border="1">
     <tr>
         <td>Computer</td>
         <td>ID</td>
         <td>Last connection</td>
+        <td>Online</td>
     </tr> 
     {% for computer in computers %}
     <tr>
@@ -23,6 +26,7 @@
         </td>
         <td>{{ computer.pk }}</td>
         <td>{{ computer.activityLength }}</td>
+        <td>{{ computer.connected }}</td>
     </tr> 
     {% endfor %}
 </table>
