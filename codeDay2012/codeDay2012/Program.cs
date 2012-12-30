@@ -60,8 +60,6 @@ namespace codeDay2012
                 String status = responseFromServer[0];
                 String resServerPws = responseFromServer[1];
 
-                // Display the content.
-                Console.WriteLine(responseFromServer); //THIS IS THE COMMAND!!!!!!!!!!!
                 // Clean up the streams.
                 reader.Close();
                 dataStream.Close();
@@ -80,15 +78,20 @@ namespace codeDay2012
             StreamReader r = new StreamReader("config.txt");
             string line = r.ReadToEnd();
             r.Close();
+
             String[] stringarray = line.Split('~');
+            String clientPws = stringarray[1];
+            String serverIp = stringarray[2];
+            String serverPws = stringarray[3];
+
             if (Convert.ToInt32(stringarray[0]) == 0)
             {
                 Console.WriteLine("What is your computer name?");
                 string name = Console.ReadLine();
 
-                WebRequest request = WebRequest.Create("http://10.100.58.69/check_in");
+                WebRequest request = WebRequest.Create("http://" + serverIp + "/check_in");
                 request.Method = "POST";
-                string postData = "name=" + name;
+                string postData = "name=" + name + "&key=" + clientPws;
                 byte[] byteArray = Encoding.UTF8.GetBytes(postData);
                 request.ContentType = "application/x-www-form-urlencoded";
                 request.ContentLength = byteArray.Length;
@@ -106,9 +109,11 @@ namespace codeDay2012
                 StreamReader reader = new StreamReader(dataStream);
                 // Read the content.
                 string responseFromServer = reader.ReadToEnd();
+
+                //Fix the config file
                 StreamWriter write = new StreamWriter("config.txt");
-                write.Write(String.Format(responseFromServer + "~{0}~{1}", stringarray[1], name));  
-                // Display the content.
+                write.Write(String.Format("{0}~{1}~{2}~{3}", responseFromServer, clientPws, serverIp, serverPws)); 
+ 
                 // Clean up the streams.
                 reader.Close();
                 dataStream.Close();
