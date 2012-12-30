@@ -1,5 +1,0 @@
-{% extends "base.html" %}
-
-{% block body %}
-<p>Status enforcer is ... </p>
-{% endblock body %{
