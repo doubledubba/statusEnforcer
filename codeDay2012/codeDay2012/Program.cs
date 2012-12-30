@@ -18,19 +18,19 @@ namespace codeDay2012
             int secs = 5;
             
             check(); //initial check of computer name and id # retreival from server
+            //prepare data to send
+            StreamReader r = new StreamReader("config.txt");        //read id from the file
+            String[] info = r.ReadToEnd().Split('~');
+            String id = info[0];
+            String serverIp = info[1];
+            r.Close();
 
             //===========TIMER=========
             while(true)
             {
                 //code here
-                WebRequest request = WebRequest.Create("http://10.100.58.69/check_in");
+                WebRequest request = WebRequest.Create("http://" + serverIp + "/check_in");
                 request.Method = "POST";
-
-                //prepare data to send
-                StreamReader r = new StreamReader("config.txt");        //read id from the file
-                String id = r.ReadToEnd().Split('~')[0];
-                Console.WriteLine(id);
-                r.Close();
 
                 string postData = string.Format("clientId=" + id);
                 byte[] byteArray = Encoding.UTF8.GetBytes(postData);
