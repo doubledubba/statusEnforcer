@@ -9,6 +9,7 @@ urlpatterns = patterns('server.views',
         url(r'^listing$', 'listing'),
         url(r'^listing/(?P<clientId>\d+)/$', 'computer_profile'),
         url(r'^killswitch$', 'killswitch'),
+        url(r'^logout/?$', 'logout_view'),
 
 )
 
