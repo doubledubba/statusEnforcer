@@ -1,6 +1,20 @@
+import os
 import requests
 
-r = requests.post('http://10.100.58.69/check_in', {'clientId': 1})
+CONFIG_PATH = os.path.join(os.environ['HOME'], '.config/statusEnforcer.txt')
+HOST = 'http://10.100.58.69'
+API = '%s/check_in' % HOST
+
+with open(CONFIG_PATH, 'r+a') as fh:
+    config = fh.read()
+    if not config:
+        name = raw_input('Name: ')
+        r = requests.post(API, {'name': name})
+        print r, r.text
+        fh.write(r.text)
+        
+
+r = requests.post(API, {'clientId': 1})
 
 print r
 print 'Connection ok:', r.ok

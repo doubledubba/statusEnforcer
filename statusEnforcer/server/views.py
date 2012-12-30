@@ -1,6 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
 
 import json
 from server.models import Computer
@@ -22,7 +23,7 @@ def index(request):
 
     return render(request, 'server/index.html')
 
-
+@login_required
 def listing(request):
     '''Main listing of all the computers'''
 
@@ -31,7 +32,7 @@ def listing(request):
     # the db
     return render(request, 'server/listing.html', params)
 
-
+@login_required
 def computer_profile(request, clientId):
     '''The page for an individual computer.
 
@@ -50,9 +51,18 @@ def computer_profile(request, clientId):
 
 @csrf_exempt
 def check_in(request):
+    print request.POST
     if not request.method == 'POST':
         return HttpResponse('away, hacker!')
-    clientId = request.POST['clientId']
+    clientId = request.POST.get('clientId')
+    if not clientId:
+        name = request.POST.get('name')
+        if not name:
+            return HttpResponse('0')
+        computer = Computer()
+        computer.name = name
+        computer.save()
+        return HttpResponse(computer.pk, mimetype='text/plain')
     computer = get_object_or_404(Computer, pk=clientId)
     computer.lastConnection = datetime.now(utc)
     computer.connected = True
