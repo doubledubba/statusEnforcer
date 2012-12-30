@@ -56,8 +56,11 @@ def check_in(request):
     computer = get_object_or_404(Computer, pk=clientId)
     computer.lastConnection = datetime.now(utc)
     computer.connected = True
+    status = computer.status
+    if computer.status != 'ok':
+        computer.status = 'ok'
     computer.save()
-    return HttpResponse(computer.status, mimetype='text/plain')
+    return HttpResponse(status, mimetype='text/plain')
 
 
 def getComputers(request):
