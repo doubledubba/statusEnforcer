@@ -16,9 +16,9 @@ logger = logging.getLogger()
 command = {
         'shutdown': 'sudo shutdown -h now',
         'restart': 'sudo shutdown -r now',
-        'hibernation': 'notify-send hibernate',
-        'logoff': 'notify-send logoff',
-        'lock': 'notify-send lock',
+        'hibernation': 'sudo pm-hibernate',
+        'logoff': 'gnome-session-quit',
+        'lock': 'gnome-screensaver-command -l',
 }
 
 CONFIG_PATH = os.path.join(os.environ['HOME'], '.config/statusEnforcer.txt')
@@ -60,8 +60,9 @@ while True:
         if reqSrvKey == SrvKey:
             logger.info('Received command from authentic server: %s', status)
             if status != 'ok':
-                cmd = command[status]
-                os.system(cmd)
+                cmd = command.get(status)
+                if cmd:
+                    os.system(cmd)
 
 
     sleep(5)
