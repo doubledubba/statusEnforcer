@@ -14,3 +14,5 @@ C:\Users\HaoNg\Desktop\codeDay2012\codeDay2012\obj\Debug\codeDay2012.pdb
 C:\Users\HaoNg\Desktop\codeDay2012\codeDay2012\bin\Debug\codeDay2012.exe
 C:\Users\HaoNg\Desktop\codeDay2012\codeDay2012\bin\Debug\codeDay2012.pdb
 C:\Users\HaoNg\Desktop\codeDay2012\codeDay2012\obj\Debug\codeDay2012.csprojResolveAssemblyReference.cache
+C:\Users\HaoNg\Desktop\codeDay2012\codeDay2012\codeDay2012\obj\Debug\codeDay2012.exe
+C:\Users\HaoNg\Desktop\codeDay2012\codeDay2012\codeDay2012\obj\Debug\codeDay2012.pdb
