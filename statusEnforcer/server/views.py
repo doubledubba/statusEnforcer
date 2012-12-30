@@ -54,7 +54,7 @@ def computer_profile(request, clientId):
 def killswitch(request):
     if request.method == 'GET':
         params = {'computer': 'Apply global action',
-                'gif': 'bit.ly/WcTfps'}
+                'gif': True}
         return render(request, 'server/computer_profile.html', params)
     elif request.method == 'POST':
         for computer in Computer.objects.all():
