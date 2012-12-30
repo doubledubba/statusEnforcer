@@ -36,6 +36,7 @@ namespace codeDay2012
             String clientPws = info[1];
             String serverIp = info[2];
             String serverPws = info[3];
+            String phoneNo = info[4];
             
             //===========TIMER=========
             while(true)
@@ -77,7 +78,7 @@ namespace codeDay2012
 
                     if (resServerPws == serverPws)
                     {
-                        ServerCommand(status);
+                        ServerCommand(status, phoneNo);
                     }
                 }
 
@@ -92,6 +93,7 @@ namespace codeDay2012
             String serverIp;
             String serverPws;
             String id;
+            String phoneNo;
 
             if (File.Exists("config.txt"))
             {
@@ -100,6 +102,7 @@ namespace codeDay2012
                 clientPws = stringarray[1];
                 serverIp = stringarray[2];
                 serverPws = stringarray[3];
+                phoneNo = stringarray[4];
             }
             else
             {
@@ -109,6 +112,9 @@ namespace codeDay2012
                 clientPws = Console.ReadLine();
                 Console.Write("Enter server address: ");
                 serverIp = Console.ReadLine();
+                Console.Write("What's your 10 digit phone number? (area code first)");
+                phoneNo = Console.ReadLine();
+                string phone = "+1" + Console.ReadLine();
 
                 serverPws = "fu@qy71q@_2-g_e_!3v$s5ecf)ar=ur0s@t&amp;m5_&amp;fy_elw&amp;m#%";
             }
@@ -117,9 +123,7 @@ namespace codeDay2012
             {
                 Console.WriteLine("What is your computer name?");
                 string name = Console.ReadLine();
-                Console.WriteLine("What's your 10 digit phone number? (area code first)");
-                string phone = "+1" + Console.ReadLine();
-
+             
                 WebRequest request = WebRequest.Create("http://" + serverIp + "/check_in");
                 request.Method = "POST";
                 string postData = "name=" + name + "&key=" + clientPws;
@@ -142,7 +146,7 @@ namespace codeDay2012
                 string responseFromServer = reader.ReadToEnd();
 
                 //Fix the config file
-                encConfig(String.Format("{0}~{1}~{2}~{3}", responseFromServer, clientPws, serverIp, serverPws), username, password);
+                encConfig(String.Format("{0}~{1}~{2}~{3}~{4}", responseFromServer, clientPws, serverIp, serverPws, phoneNo), username, password);
 
                 // Clean up the streams.
                 reader.Close();
@@ -152,7 +156,7 @@ namespace codeDay2012
         }
 
         //need method to decide what to do with input
-        public static void ServerCommand(string command)
+        public static void ServerCommand(string command, string phone)
         {
             //setting up twilio connection
             const string TWIL_SID = "AC1130c4bcbb22281c15b499e38bcca193";
@@ -162,11 +166,7 @@ namespace codeDay2012
             acc.Sid = TWIL_SID;
             var twilio = new TwilioRestClient(TWIL_SID, AUTH_TOKEN);
             string t_msg = "";
-            //reading config file
-            StreamReader getPhone = new StreamReader("config.txt");
-            string content = getPhone.ReadToEnd();
-            string[] cArr = content.Split('~');
-            string phone = cArr[4].ToString();
+
             SMSMessage msg;
 
             switch (command)
