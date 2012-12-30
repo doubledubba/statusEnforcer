@@ -152,4 +152,4 @@ LOGGING = {
 }
 
 
-threshold = 45
+threshold = 15

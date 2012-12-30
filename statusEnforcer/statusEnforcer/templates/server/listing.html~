@@ -8,7 +8,6 @@
         setTimeout(function() {window.location.reload();}, 5000);
     }
     window.onload = reloader
-
 </script>
 
 <table border="1">
