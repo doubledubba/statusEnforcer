@@ -1,5 +1,6 @@
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, get_object_or_404
+from django.views.decorators.csrf import csrf_exempt
 
 from server.models import Computer
 from pytz import utc
@@ -46,12 +47,12 @@ def computer_profile(request, clientId):
         params = {'computer': computer}
         return render(request, 'server/computer_profile.html', params)
 
-
+@csrf_exempt
 def check_in(request):
     if not request.method == 'POST':
         return HttpResponse('away, hacker!')
     clientId = request.POST['clientId']
-    computer = get_object_404(Computer, pk=clientId)
+    computer = get_object_or_404(Computer, pk=clientId)
     computer.lastConnection = datetime.now(utc)
     computer.connected = True
     computer.save()
