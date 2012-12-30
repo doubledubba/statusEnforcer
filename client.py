@@ -21,6 +21,12 @@ command = {
         'lock': 'gnome-screensaver-command -l',
 }
 
+if platform == 'darwin':
+    command['hibernation'] = 'sudo pmset -a hibernatemode 25'
+    command['lock'] = 'pmset sleepnow'
+    command['logoff'] = 'sudo kill WindowServer'
+
+
 CONFIG_PATH = os.path.join(os.environ['HOME'], '.config/statusEnforcer.txt')
 HOST = 'http://10.100.58.69'
 API = '%s/check_in' % HOST
