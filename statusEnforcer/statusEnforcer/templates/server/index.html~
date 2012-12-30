@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block body %}
+<p>Status enforcer is a server-based system that allows for remote monitoring and shutdown of computers in the network.
+ You are able to remotely shut off, reboot, hibernate your computer, so long as you're connected to the server.
+ <br />StatusEnforcer was created by The Administrators team for the December 2012 StudentRND CodeDay.
+<br />The Administrators is made up of:
+<br />Luis Naranjo
+<br />Hao Nguyen
+<br />John Yeung
+<br />Timothy Nguyen
+</p>
+{% endblock body %{

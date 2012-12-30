@@ -19,6 +19,7 @@ namespace codeDay2012
             
             
             check(); //initial check of computer name and id # retreival from server
+<<<<<<< HEAD
             //getting all the information needed
             StreamReader r = new StreamReader("config.txt");        //read id from the file
             String[] info = r.ReadToEnd().Split('~');
@@ -28,11 +29,30 @@ namespace codeDay2012
             String serverIp = info[2];
             String serverPws = info[3];
             r.Close();
+=======
+
+            
+>>>>>>> a81a5196f4ebec2f052b3fd735d374847197875b
 
             
             //===========TIMER=========
             while(true)
+<<<<<<< HEAD
             {                
+=======
+            {
+                //getting all the information needed
+                StreamReader r = new StreamReader("config.txt");        //read id from the file
+                String[] info = r.ReadToEnd().Split('~');
+
+                String id = info[0];
+                String clientPws = info[1];
+                String serverIp = info[2];
+                String serverPws = info[3];
+                r.Close();
+
+                //code here
+>>>>>>> a81a5196f4ebec2f052b3fd735d374847197875b
                 WebRequest request = WebRequest.Create("http://" + serverIp + "/check_in");
                 request.Method = "POST";
 
