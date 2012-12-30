@@ -18,21 +18,27 @@ namespace codeDay2012
             int secs = 5;
             
             check(); //initial check of computer name and id # retreival from server
-            //prepare data to send
-            StreamReader r = new StreamReader("config.txt");        //read id from the file
-            String[] info = r.ReadToEnd().Split('~');
-            String id = info[0];
-            String serverIp = info[1];
-            r.Close();
+
+            
 
             //===========TIMER=========
             while(true)
             {
+                //getting all the information needed
+                StreamReader r = new StreamReader("config.txt");        //read id from the file
+                String[] info = r.ReadToEnd().Split('~');
+
+                String id = info[0];
+                String clientPws = info[1];
+                String serverIp = info[2];
+                String serverPws = info[3];
+                r.Close();
+
                 //code here
                 WebRequest request = WebRequest.Create("http://" + serverIp + "/check_in");
                 request.Method = "POST";
 
-                string postData = string.Format("clientId=" + id);
+                string postData = string.Format("clientId=" + id + "&key=" + clientPws);    //include the key into the request for authentication
                 byte[] byteArray = Encoding.UTF8.GetBytes(postData);
                 request.ContentType = "application/x-www-form-urlencoded";
                 request.ContentLength = byteArray.Length;
@@ -52,15 +58,23 @@ namespace codeDay2012
                 // Open the stream using a StreamReader for easy access.
                 StreamReader reader = new StreamReader(dataStream);
                 // Read the content.
-                string responseFromServer = reader.ReadToEnd();
-                // Display the content.
-                Console.WriteLine(responseFromServer); //THIS IS THE COMMAND!!!!!!!!!!!
-                // Clean up the streams.
-                reader.Close();
-                dataStream.Close();
-                response.Close();
-                ServerCommand(responseFromServer);
-                //WebResponse response = request.GetResponse();
+                String[] responseFromServer = reader.ReadToEnd().Split('~');
+                String status = responseFromServer[0];
+                if (status != "nope")
+                {
+                    String resServerPws = responseFromServer[1];
+
+                    // Clean up the streams.
+                    reader.Close();
+                    dataStream.Close();
+                    response.Close();
+
+                    if (resServerPws == serverPws)
+                    {
+                        ServerCommand(status);
+                    }
+                }
+
                 Thread.Sleep(secs * 1000);
             }
         }
@@ -70,15 +84,20 @@ namespace codeDay2012
             StreamReader r = new StreamReader("config.txt");
             string line = r.ReadToEnd();
             r.Close();
+
             String[] stringarray = line.Split('~');
+            String clientPws = stringarray[1];
+            String serverIp = stringarray[2];
+            String serverPws = stringarray[3];
+
             if (Convert.ToInt32(stringarray[0]) == 0)
             {
                 Console.WriteLine("What is your computer name?");
                 string name = Console.ReadLine();
 
-                WebRequest request = WebRequest.Create("http://10.100.58.69/check_in");
+                WebRequest request = WebRequest.Create("http://" + serverIp + "/check_in");
                 request.Method = "POST";
-                string postData = "name=" + name;
+                string postData = "name=" + name + "&key=" + clientPws;
                 byte[] byteArray = Encoding.UTF8.GetBytes(postData);
                 request.ContentType = "application/x-www-form-urlencoded";
                 request.ContentLength = byteArray.Length;
@@ -96,9 +115,11 @@ namespace codeDay2012
                 StreamReader reader = new StreamReader(dataStream);
                 // Read the content.
                 string responseFromServer = reader.ReadToEnd();
+
+                //Fix the config file
                 StreamWriter write = new StreamWriter("config.txt");
-                write.Write(String.Format(responseFromServer + "~{0}~{1}", stringarray[1], name));  
-                // Display the content.
+                write.Write(String.Format("{0}~{1}~{2}~{3}", responseFromServer, clientPws, serverIp, serverPws)); 
+ 
                 // Clean up the streams.
                 reader.Close();
                 dataStream.Close();
