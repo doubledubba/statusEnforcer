@@ -5,11 +5,15 @@
     <tr>
         <td>Computer</td>
         <td>ID</td>
+        <td>Last connection</td>
     </tr> 
     {% for computer in computers %}
     <tr>
-        <td>{{ computer.name }}</td>
+        <td>
+            <a href="{{ computer.get_absolute_url }}">{{ computer.name }}</a>
+        </td>
         <td>{{ computer.pk }}</td>
+        <td>{{ computer.lastConnection }}</td>
     </tr> 
     {% endfor %}
 </table>

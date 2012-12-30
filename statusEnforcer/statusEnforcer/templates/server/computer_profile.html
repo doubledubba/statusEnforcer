@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block body %}
+
+<h1>{{ computer }}</h1>
+
+<form method="POST">
+    {% csrf_token %}
+    <select name="status">
+        <option value="shutdown">Shutdown</option>
+        <option value="sleep">Sleep</option>
+        <option value="restart">Restart</option>
+    </select>
+    <br>
+    <input type="submit">
+</form>
+{% endblock body %}

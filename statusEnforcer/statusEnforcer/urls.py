@@ -6,6 +6,7 @@ admin.autodiscover()
 urlpatterns = patterns('server.views',
         url(r'^$', 'index'),
         url(r'^listing$', 'listing'),
+        url(r'^listing/(?P<clientId>\d+)/$', 'computer_profile'),
 
 )
 
