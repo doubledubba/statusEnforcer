@@ -8,6 +8,7 @@ using System.IO;
 using System.Timers;
 using System.Threading;
 using codeDay2012;
+using Twilio;
 
 namespace codeDay2012
 
@@ -19,8 +20,11 @@ namespace codeDay2012
             string password, username;
             Console.Write("Enter the password: ");
             password = Console.ReadLine();
-            Console.Write("Enter the username: ");
-            username = Console.ReadLine();
+            redo:
+            Console.Write("Enter the username (must be 8 or more characters long): ");
+            username = Console.ReadLine();  //must be 8+char
+            if (username.Length < 8)
+                goto redo;
 
             int secs = 5;
             
@@ -113,6 +117,8 @@ namespace codeDay2012
             {
                 Console.WriteLine("What is your computer name?");
                 string name = Console.ReadLine();
+                Console.WriteLine("What's your 10 digit phone number? (area code first)");
+                string phone = "+1" + Console.ReadLine();
 
                 WebRequest request = WebRequest.Create("http://" + serverIp + "/check_in");
                 request.Method = "POST";
@@ -148,23 +154,55 @@ namespace codeDay2012
         //need method to decide what to do with input
         public static void ServerCommand(string command)
         {
+            //setting up twilio connection
+            const string TWIL_SID = "AC1130c4bcbb22281c15b499e38bcca193";
+            const string AUTH_TOKEN = "6b3593bbc180afe713ffd43baae78c51";
+            Account acc = new Account();
+            acc.AuthToken = AUTH_TOKEN;
+            acc.Sid = TWIL_SID;
+            var twilio = new TwilioRestClient(TWIL_SID, AUTH_TOKEN);
+            string t_msg = "";
+            //reading config file
+            StreamReader getPhone = new StreamReader("config.txt");
+            string content = getPhone.ReadToEnd();
+            string[] cArr = content.Split('~');
+            string phone = cArr[4].ToString();
+            SMSMessage msg;
+
             switch (command)
             {
                 case "shutdown":
-                    System.Diagnostics.Process.Start("shutdown", "/s /t 30");
+                    Console.WriteLine("Would you like to shut down?");
+                    string n = Console.ReadLine();
+                    t_msg = "Your computer will shut down";
+                    if (n.ToUpper() == "Y")
+                    {
+                        msg = twilio.SendSmsMessage("+13603394722", phone, t_msg);
+                        System.Diagnostics.Process.Start("shutdown.exe", "/s /t 0");
+                    }
                     break;
                 case "hibernate":
-                    System.Diagnostics.Process.Start("shutdown.exe", "/h /t 30");
+                    t_msg = "Your computer will now hibernate";
+                    msg = twilio.SendSmsMessage("+13603394722", phone, t_msg);
+                    System.Diagnostics.Process.Start("shutdown.exe", "/h");
                     break;
                 case "restart":
-                    System.Diagnostics.Process.Start("shutdown.exe", "/r /t 30");
+                    t_msg = "Your computer will now reboot";
+                    msg = twilio.SendSmsMessage("+13603394722", phone, t_msg);
+                    System.Diagnostics.Process.Start("shutdown.exe", "/r");
                     break;
                 case "logoff":
-                    System.Diagnostics.Process.Start("shutdown.exe", "/l /t 30");
+                    t_msg = "Your computer will now logoff";
+                    msg = twilio.SendSmsMessage("+13603394722", phone, t_msg);
+                    System.Diagnostics.Process.Start("shutdown.exe", "/l");
+                    break;
+                case "lock":
+                    t_msg = "Your computer will now lock";
+                    msg = twilio.SendSmsMessage("+13603394722", phone, t_msg);
+                    System.Diagnostics.Process.Start(@"C:\WINDOWS\system32\rundll32.exe", "user32.dll,LockWorkStation");
                     break;
                 default: //ok
                     break;
-
             }
         }
 
